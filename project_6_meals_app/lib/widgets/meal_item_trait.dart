@@ -9,7 +9,6 @@ class MealItemTrait extends StatelessWidget {
 
   final IconData icon;
   final String label;
-
   @override
   Widget build(BuildContext context) {
     return Row(
