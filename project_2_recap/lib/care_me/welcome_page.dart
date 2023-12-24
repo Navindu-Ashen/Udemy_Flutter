@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:project_2_recap/care_me/login_screen.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key, required this.onLoginScreen});

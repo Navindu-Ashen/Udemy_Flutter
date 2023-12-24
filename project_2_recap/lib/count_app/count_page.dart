@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CountPage extends StatefulWidget {
-  const CountPage(this.goBack, {super.key});
+  const CountPage({super.key});
 
-  final void Function() goBack;
 
   @override
   State<CountPage> createState() => _CountPageState();
@@ -25,9 +24,9 @@ class _CountPageState extends State<CountPage> {
     });
   }
 
-  void backButtonClick() {
-    widget.goBack();
-  }
+  // void backButtonClick() {
+  //   widget.goBack();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +68,7 @@ class _CountPageState extends State<CountPage> {
               "Increment",
               style: TextStyle(
                 fontSize: 18,
+                color: Colors.white,
               ),
             ),
           ),
@@ -88,29 +88,14 @@ class _CountPageState extends State<CountPage> {
               "Decrement",
               style: TextStyle(
                 fontSize: 18,
+                color: Colors.white,
               ),
             ),
           ),
           const SizedBox(
             height: 20,
           ),
-          OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              // backgroundColor: const Color.fromARGB(255, 127, 91, 233),
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 50),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(40),
-              ),
-            ),
-            onPressed: backButtonClick,
-            child: const Text(
-              "Back",
-              style: TextStyle(
-                fontSize: 18,
-              ),
-            ),
-          )
+          
         ],
       ),
     );

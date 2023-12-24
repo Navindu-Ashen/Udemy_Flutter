@@ -67,7 +67,7 @@ class _BackgroundState extends State<Background> {
         HomePage(switchScreen, switchScreenQuiz, switchScreenCareMe);
 
     if (activeScreen == "count-screen") {
-      currentScreen = CountPage(switchScreenBack);
+      currentScreen = CountPage();
       // currentScreen = const WelcomePage();
     } else if (activeScreen == "quiz-screen") {
       currentScreen = QuizPage(
@@ -85,9 +85,7 @@ class _BackgroundState extends State<Background> {
     } else if (activeScreen == "login-screen") {
       currentScreen = const LoginScreen();
     }
-    return MaterialApp(
-      home: Scaffold(
-        body: Container(
+    return Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
@@ -101,8 +99,7 @@ class _BackgroundState extends State<Background> {
             ),
           ),
           child: currentScreen,
-        ),
-      ),
+
     );
   }
 }

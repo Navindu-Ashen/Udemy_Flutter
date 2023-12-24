@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage(this.startAppCount, this.startAppQuiz, this.startAppCareMe, {super.key});
+  const HomePage(this.startAppCount, this.startAppQuiz, this.startAppCareMe,
+      {super.key});
 
   final void Function() startAppCount;
   final void Function() startAppQuiz;
@@ -15,10 +16,10 @@ class HomePage extends StatelessWidget {
       height: double.infinity,
       child: Column(
         // margin: const EdgeInsets.only(top: 50),
-        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           const SizedBox(
-            height: 100,
+            height: 40,
           ),
           Text(
             "Welcome..!",
@@ -43,7 +44,7 @@ class HomePage extends StatelessWidget {
             onPressed: startAppCount,
             child: const Text(
               "Count App",
-              style: TextStyle(fontSize: 24),
+              style: TextStyle(fontSize: 24, color: Colors.white),
             ),
           ),
           const SizedBox(
@@ -60,7 +61,7 @@ class HomePage extends StatelessWidget {
             onPressed: startAppQuiz,
             child: const Text(
               "Quiz App",
-              style: TextStyle(fontSize: 24),
+              style: TextStyle(fontSize: 24, color: Colors.white),
             ),
           ),
           const SizedBox(
@@ -77,8 +78,11 @@ class HomePage extends StatelessWidget {
             onPressed: startAppCareMe,
             child: const Text(
               "CareMe App Screen",
-              style: TextStyle(fontSize: 24),
+              style: TextStyle(fontSize: 24, color: Colors.white),
             ),
+          ),
+          const SizedBox(
+            height: 40,
           ),
         ],
       ),

@@ -11,11 +11,13 @@ class MealDetails extends StatelessWidget {
   final Meal meal;
   final void Function(Meal meal) onToggleFavourit;
 
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${meal.title}"),
+        title: Text(meal.title),
         actions: [
           IconButton(
             onPressed: () {
