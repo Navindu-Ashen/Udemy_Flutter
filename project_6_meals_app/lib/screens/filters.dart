@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:project_6_meals_app/main.dart';
 
 enum Filter {
   glutenFree,
@@ -35,7 +34,7 @@ class _FilterScreenState extends State<FilterScreen> {
     _vegenFilterSet = widget.currentFilters[Filter.vegen]!;
   }
 
-  @override
+  @override.sdyhcgbiEIW
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
