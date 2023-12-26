@@ -1,5 +1,4 @@
 import 'package:project_7_shopping_app/models/category.dart';
-import 'package:flutter/material.dart';
 
 class GroceryItem {
   const GroceryItem({
