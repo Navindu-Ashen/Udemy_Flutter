@@ -15,6 +15,8 @@ class GroceryList extends StatefulWidget {
 
 class _GroceryListState extends State<GroceryList> {
   List<GroceryItem> _groceryItems = [];
+  var isLoading = true;
+  String? _error;
 
   @override
   void initState() {
@@ -28,17 +30,24 @@ class _GroceryListState extends State<GroceryList> {
       "shopping-app.json",
     );
     final response = await http.get(url);
-    final Map<String, dynamic> listData =
-        json.decode(response.body);
+    print(response.statusCode);
+    if (response.statusCode >= 400) {
+      setState(() {
+        _error = "Failed to fetch data. Please try again later.";
+      });
+      
+    }
 
-    final List<GroceryItem> _loadedItems = [];
+    final Map<String, dynamic> listData = json.decode(response.body);
+
+    final List<GroceryItem> loadedItems = [];
     for (final item in listData.entries) {
       final category = categories.entries
           .firstWhere(
             (catItem) => catItem.value.title == item.value["category"],
           )
           .value;
-      _loadedItems.add(
+      loadedItems.add(
         GroceryItem(
           id: item.key,
           name: item.value["name"],
@@ -48,18 +57,25 @@ class _GroceryListState extends State<GroceryList> {
       );
     }
     setState(() {
-       _groceryItems = _loadedItems;
+      _groceryItems = loadedItems;
+      isLoading = false;
     });
-   
   }
 
   void _addItem() async {
-    await Navigator.of(context).push<GroceryItem>(
+    final newItem = await Navigator.of(context).push<GroceryItem>(
       MaterialPageRoute(
         builder: (ctx) => const NewItem(),
       ),
     );
-    _loadItems();
+
+    if (newItem == null) {
+      return;
+    }
+
+    setState(() {
+      _groceryItems.add(newItem);
+    });
   }
 
   void removeItem(GroceryItem item) {
@@ -88,6 +104,12 @@ class _GroceryListState extends State<GroceryList> {
     Widget content = const Center(
       child: Text("Not available items!"),
     );
+
+    if (isLoading) {
+      content = const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
 
     if (_groceryItems.isNotEmpty) {
       content = ListView.builder(
@@ -124,6 +146,13 @@ class _GroceryListState extends State<GroceryList> {
         ),
       );
     }
+
+    if (_error != null) {
+      content = Center(
+        child: Text(_error!, style: const TextStyle(fontSize: 16),),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
