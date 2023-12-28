@@ -8,11 +8,9 @@ import 'package:project_6_meals_app_riverpod/models/category.dart';
 class CategoriesScreen extends StatelessWidget {
   const CategoriesScreen({
     super.key,
-    required this.onToggleFavourit,
     required this.availableMeals,
   });
 
-  final void Function(Meal meal) onToggleFavourit;
   final List<Meal> availableMeals;
 
   void _selectCategory(BuildContext context, Category category) {
@@ -24,7 +22,6 @@ class CategoriesScreen extends StatelessWidget {
         builder: (ctx) => MealsScreen(
           title: category.title,
           meals: filteredMeals,
-          onToggleFavourit: onToggleFavourit,
         ),
       ),
     );
