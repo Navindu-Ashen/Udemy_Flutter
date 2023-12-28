@@ -34,7 +34,7 @@ class _FilterScreenState extends State<FilterScreen> {
     _vegenFilterSet = widget.currentFilters[Filter.vegen]!;
   }
 
-  @override.sdyhcgbiEIW
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
