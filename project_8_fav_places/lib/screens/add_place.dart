@@ -1,14 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddPlaceScreen extends StatefulWidget {
+import 'package:project_8_fav_places/providers/user_places.dart';
+
+class AddPlaceScreen extends ConsumerStatefulWidget {
   const AddPlaceScreen({super.key});
 
   @override
-  State<AddPlaceScreen> createState() => _AddPlaceScreenState();
+  ConsumerState<AddPlaceScreen> createState() => _AddPlaceScreenState();
 }
 
-class _AddPlaceScreenState extends State<AddPlaceScreen> {
+class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   final _titleController = TextEditingController();
+
+  void _savePlace() {
+    final enteredTitle = _titleController.text;
+
+    if (enteredTitle.isEmpty ||
+        enteredTitle.length > 50 ||
+        enteredTitle.length <= 1) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text("Invalid Input"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              child: const Text("Okey"),
+            ),
+          ],
+        ),
+      );
+    }
+
+  }
 
   @override
   void dispose() {
@@ -31,7 +58,10 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                 label: Text("Title"),
               ),
               controller: _titleController,
-              style: TextStyle(color: Theme.of(context).colorScheme.onBackground, fontSize: 18),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onBackground,
+                fontSize: 18,
+              ),
             ),
             const SizedBox(
               height: 16,
