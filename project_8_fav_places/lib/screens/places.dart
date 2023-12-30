@@ -33,3 +33,4 @@ class PlacesScreen extends ConsumerWidget {
     );
   }
 }
+

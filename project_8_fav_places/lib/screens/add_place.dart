@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:project_8_fav_places/providers/user_places.dart';
+import 'package:project_8_fav_places/widgets/image_input.dart';
+import 'package:project_8_fav_places/widgets/location_input.dart';
 
 class AddPlaceScreen extends ConsumerStatefulWidget {
   const AddPlaceScreen({super.key});
@@ -12,13 +16,15 @@ class AddPlaceScreen extends ConsumerStatefulWidget {
 
 class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   final _titleController = TextEditingController();
+  File? _selectedImage;
 
   void _savePlace() {
     final enteredTitle = _titleController.text;
 
     if (enteredTitle.isEmpty ||
         enteredTitle.length > 50 ||
-        enteredTitle.length <= 1) {
+        enteredTitle.length <= 1 ||
+        _selectedImage == null) {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -28,14 +34,19 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
               onPressed: () {
                 Navigator.pop(ctx);
               },
-              child: const Text("Okey", style: TextStyle(color: Colors.black),),
+              child: const Text(
+                "Okey",
+                style: TextStyle(color: Colors.black),
+              ),
             ),
           ],
         ),
       );
       return;
     }
-    ref.read(userPlacesProvider.notifier).addPlace(enteredTitle);
+    ref
+        .read(userPlacesProvider.notifier)
+        .addPlace(enteredTitle, _selectedImage!);
     Navigator.of(context).pop();
   }
 
@@ -65,6 +76,16 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
                 fontSize: 18,
               ),
             ),
+            const SizedBox(
+              height: 12,
+            ),
+            ImageInput(
+              onPickImage: (image) {
+                _selectedImage = image;
+              },
+            ),
+            const SizedBox(height: 12,),
+            const LocationInput(),
             const SizedBox(
               height: 16,
             ),
