@@ -19,23 +19,24 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
     if (enteredTitle.isEmpty ||
         enteredTitle.length > 50 ||
         enteredTitle.length <= 1) {
-      // showDialog(
-      //   context: context,
-      //   builder: (ctx) => AlertDialog(
-      //     title: const Text("Invalid Input"),
-      //     actions: [
-      //       TextButton(
-      //         onPressed: () {
-      //           Navigator.pop(ctx);
-      //         },
-      //         child: const Text("Okey"),
-      //       ),
-      //     ],
-      //   ),
-      // );
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text("Invalid Input"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              child: const Text("Okey", style: TextStyle(color: Colors.black),),
+            ),
+          ],
+        ),
+      );
       return;
     }
-    ref.read(userPlacesProvider);
+    ref.read(userPlacesProvider.notifier).addPlace(enteredTitle);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -68,7 +69,7 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
               height: 16,
             ),
             ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: _savePlace,
               icon: const Icon(Icons.add),
               label: const Text(
                 "Add place",
