@@ -28,14 +28,21 @@ class PlacesList extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: ListTile(
             leading: CircleAvatar(
-              radius: 26,
+              radius: 28,
               backgroundImage: FileImage(places[index].image),
             ),
             title: Text(
               places[index].title,
-              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
                     color: Theme.of(context).colorScheme.onBackground,
                   ),
+            ),
+            subtitle: Text(
+              places[index].location.address,
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
+                  maxLines: 1,
             ),
             onTap: () {
               Navigator.of(context).push(
