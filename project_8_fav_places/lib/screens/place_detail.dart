@@ -9,7 +9,7 @@ class PlaceDetailScreen extends StatelessWidget {
   String get locationImage {
     final lat = place.location.latitude;
     final lng = place.location.longitude;
-    return "https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:A%7C$lat,$lng&key=AIzaSyAcKZHMOpRIqKUPAAP1U-n8Vp6nEtg7pcs";
+    return "https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=17&size=600x300&maptype=roadmap&markers=color:red%7Clabel:A%7C$lat,$lng&key=AIzaSyAcKZHMOpRIqKUPAAP1U-n8Vp6nEtg7pcs";
   }
 
   @override
@@ -32,10 +32,24 @@ class PlaceDetailScreen extends StatelessWidget {
             right: 0,
             child: Column(
               children: [
-                CircleAvatar(
-                  radius: 80,
-                  backgroundImage: NetworkImage(locationImage),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      image: DecorationImage(
+                        image: NetworkImage(locationImage),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    height: 150,
+                    width: 250,
+                  ),
                 ),
+                // CircleAvatar(
+                //   radius: 80,
+                //   backgroundImage: NetworkImage(locationImage),
+                // ),
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 24,
