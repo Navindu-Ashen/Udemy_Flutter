@@ -1,10 +1,12 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:project_7_shopping_app/data/categories.dart';
 import 'package:project_7_shopping_app/models/grocery_item.dart';
 import 'package:project_7_shopping_app/widgets/new_item.dart';
+import 'package:uuid/uuid.dart';
+
+const uuid = Uuid();
 
 class GroceryList extends StatefulWidget {
   const GroceryList({super.key});
@@ -59,6 +61,7 @@ class _GroceryListState extends State<GroceryList> {
         loadedItems.add(
           GroceryItem(
             id: item.key,
+            rollNumber: uuid.v4(),
             name: item.value["name"],
             quantity: item.value["quantity"],
             category: category,

@@ -3,8 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:project_7_shopping_app/data/categories.dart';
+import 'package:project_7_shopping_app/data/dummy_items.dart';
 import 'package:project_7_shopping_app/models/category.dart';
 import 'package:project_7_shopping_app/models/grocery_item.dart';
+import 'package:uuid/uuid.dart';
+
+const uuid = Uuid();
 
 class NewItem extends StatefulWidget {
   const NewItem({super.key});
@@ -17,10 +21,12 @@ class _NewItemState extends State<NewItem> {
   final _formKey = GlobalKey<FormState>();
   var _enteredName = "";
   var _enteredQuantity = 1;
+  
   var _selectedCategory = categories[Categories.vegetables]!;
   var isSending = false;
 
   void _saveItem() async {
+    var _rollNumber = uuid.v4();
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       setState(() {
@@ -40,9 +46,31 @@ class _NewItemState extends State<NewItem> {
             "name": _enteredName,
             "quantity": _enteredQuantity,
             "category": _selectedCategory.title,
+            "rollnum": _rollNumber,
           },
         ),
       );
+
+      final url2 = Uri.https(
+        "flutter-test1-52276-default-rtdb.firebaseio.com",
+        "shopping-app-copy.json",
+      );
+      final responce2 = await http.post(
+        url2,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: json.encode(
+          {
+            "name": _enteredName,
+            "quantity": _enteredQuantity,
+            "category": _selectedCategory.title,
+            "rollnum": _rollNumber,
+          },
+        ),
+      );
+
+      final Map<String, dynamic> resData2 = json.decode(responce2.body);
 
       print(responce.statusCode);
       final Map<String, dynamic> resData = json.decode(responce.body);
@@ -54,6 +82,7 @@ class _NewItemState extends State<NewItem> {
       Navigator.of(context).pop(
         GroceryItem(
           id: resData["name"],
+          rollNumber: _rollNumber,
           name: _enteredName,
           quantity: _enteredQuantity,
           category: _selectedCategory,

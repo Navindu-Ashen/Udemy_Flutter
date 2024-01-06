@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <title>Sample Table</title>
+  <style>
+    h2 {text-align: center;}
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <table>
+      <thead>
+        <tr>
+          <th>Item No </th>
+          <th>Category</th>
+          <th>Name</th>
+          <th>Quantity</th>
+        </tr>
+      </thead>
+      <tbody id="tbody1">
+
+      </tbody>
+    </table>
+  </div>
+  
+
+  <script type="module">
+
+    var itemNo = 0;
+    var tbody = document.getElementById("tbody1");
+
+    function AddItemToTable(category, name, quantity){
+      let trow = document.createElement("tr");
+      let td1 = document.createElement("td");
+      let td2 = document.createElement("td");
+      let td3 = document.createElement("td");
+      let td4 = document.createElement("td");
+
+      td1.innerHTML = ++itemNo;
+      td2.innerHTML = category;
+      td3.innerHTML = name;
+      td4.innerHTML = quantity;
+
+      trow.appendChild(td1);
+      trow.appendChild(td2);
+      trow.appendChild(td3);
+      trow.appendChild(td4);
+
+      tbody.appendChild(trow);
+      
+      }
+
+    function AddAllItemsToTable(TheItem){
+      itemNo = 0;
+      tbody.innerHTML = "";
+      TheItem.forEach(element => {
+        AddItemToTable(element.category, element.name, element.quantity);
+      });
+
+    }
+
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDGgznNsfhL3FmyyRRLt0B08c35YDMwe2Y",
+      authDomain: "flutter-test2-936a9.firebaseapp.com",
+      databaseURL: "https://flutter-test2-936a9-default-rtdb.firebaseio.com",
+      projectId: "flutter-test2-936a9",
+      storageBucket: "flutter-test2-936a9.appspot.com",
+      messagingSenderId: "258140281519",
+      appId: "1:258140281519:web:811eb2fad2d9d4dba6525a"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
+    import { getDatabase, ref, child, onValue, get }
+    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    
+    const db = getDatabase();
+  
+
+    function GetAllDataOnce(){
+      const dbRef = ref(db);
+
+      get(child(dbRef, "Item"))
+      .then((snapshot) => {
+
+        var items = [];
+
+        snapshot.forEach(childSnapshot => {
+          items.push(childSnapshot.val());
+        });
+
+        AddAllItemsToTable(items);
+      });
+    }
+
+    function GetAllDataRealtime(){
+      const dbRef = ref(db, "Item");
+
+      onValue(dbRef, (snapshot)=>{
+        var items = [];
+
+        snapshot.forEach(childSnapshot => {
+          items.push(childSnapshot.val());
+        });
+
+        AddAllItemsToTable(items);
+      });
+    }
+
+    window.onload = GetAllDataRealtime;
+
+  </script>
+
+</body>
+</html>

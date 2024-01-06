@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <title>Document</title>
+
+  <title>Sample Table</title>
+  <style>
+    h2 {text-align: center;}
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .lables {
+        display: inline-block;
+        width: 100px;
+        margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <h1>Current Data</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Item No </th>
+          <th>Roll Number</th>
+          <th>Category</th>
+          <th>Name</th>
+          <th>Quantity</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="tbody1">
+      </tbody>
+    </table>
+  </div>
+  
+  <a href="web3_backup.html"><button style="margin-top: 20px; padding: 10px;">Backup List</button></a>
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Delete Recode</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label class="lables">Category: </label>
+          <input type="text" id="CategoryLabel"><br>
+          <label class="lables">Name: </label>
+          <input type="text" id="NameLabel"><br>
+          <label class="lables">Quantity: </label>
+          <input type="text" id="QuantityLabel"><br> 
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button id="DeleteBtn" type="button" class="btn btn-danger delBtnRecode" onclick="delRecode()">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyATXZkqRM78XuaVfbxOb4Gz-onavq9b-D0",
+        authDomain: "flutter-test1-52276.firebaseapp.com",
+        databaseURL: "https://flutter-test1-52276-default-rtdb.firebaseio.com",
+        projectId: "flutter-test1-52276",
+        storageBucket: "flutter-test1-52276.appspot.com",
+        messagingSenderId: "509020274776",
+        appId: "1:509020274776:web:4b509bb598c737863fca2d"
+    };
+
+    const app = initializeApp(firebaseConfig);
+
+    import {getDatabase, ref, child, onValue, get, remove}
+    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const db = getDatabase();
+
+    var itemNo = 0;
+    var ItemList = [];
+    var tbody = document.getElementById("tbody1");
+
+    let ModalCategory = document.getElementById('CategoryLabel');
+    let ModalName = document.getElementById('NameLabel');
+    let ModalQuantity = document.getElementById('QuantityLabel');
+
+    let ActionDelete = document.getElementById('DeleteBtn');
+
+
+    function AddItemToTable(category, name, quantity, rollnum){
+      var trow = document.createElement("tr");
+      var td1 = document.createElement("td");
+      var td2 = document.createElement("td");
+      var td3 = document.createElement("td");
+      var td4 = document.createElement("td");
+      var td5 = document.createElement("td");
+
+      ItemList.push([category,name,quantity]).toString();
+
+      td1.innerHTML = ++itemNo;
+      td2.innerHTML = rollnum;
+      td3.innerHTML = category;
+      td4.innerHTML = name;
+      td5.innerHTML = quantity;
+
+      trow.appendChild(td1);
+      trow.appendChild(td2);
+      trow.appendChild(td3);
+      trow.appendChild(td4);
+      trow.appendChild(td5);
+
+      var ActionsDiv = document.createElement("div");
+      // ActionsDiv.innerHTML = '<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="fillTboxes('+itemNo+')" >Delete</button>'
+      ActionsDiv.innerHTML = '<button type="button" class="btn btn-danger" onclick="DeleteRecode('+rollnum+')">Delete</button>'
+
+
+      trow.appendChild(ActionsDiv);
+      tbody.appendChild(trow);
+      
+      }
+
+    function AddAllItemsToTable(TheItem){
+      itemNo = 0;
+      tbody.innerHTML = "";
+      TheItem.forEach(element => {
+        AddItemToTable(element.category, element.name, element.quantity, element.rollnum);
+      });
+
+    }
+    // function GetAllDataOnce(){
+    //   const dbRef = ref(db);
+
+    //   get(child(dbRef, "shopping-app"))
+    //   .then((snapshot) => {
+
+    //     var items = [];
+
+    //     snapshot.forEach(childSnapshot => {
+    //       items.push(childSnapshot.val());
+    //     });
+
+    //     AddAllItemsToTable(items);
+    //   });
+    // }
+
+    function GetAllDataRealtime(){
+      const dbRef = ref(db, "shopping-app");
+
+      onValue(dbRef, (snapshot)=>{
+        var items = [];
+
+        snapshot.forEach(childSnapshot => {
+          items.push(childSnapshot.val());
+        });
+
+        AddAllItemsToTable(items);
+      });
+    }
+
+    function fillTboxes(myIndex){
+        --myIndex;
+        ModalCategory.value = ItemList[myIndex][0];
+        ModalName.value = ItemList[myIndex][1];
+        ModalQuantity.value = ItemList[myIndex][2];
+    }
+
+    function DeleteRecode(recNo){
+      remove(ref(db, "shopping-app/" + recNo))
+      .then(()=>{
+        alert("Deleted!");
+      })
+      .catch((error)=>{
+        alert("Error");
+        console.log(error);
+      })
+    }
+
+    window.onload = GetAllDataRealtime;
+
+  </script>
+
+</body>
+</html>
