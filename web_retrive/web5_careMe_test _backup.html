@@ -18,8 +18,8 @@
 
     th, td {
       border: 1px solid #dddddd;
-      text-align: left;
-      padding: 8px;
+      text-align: center;
+      /* padding: 8px; */
     }
 
     th {
@@ -39,11 +39,14 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Item No </th>
-          <th>Roll Number</th>
-          <th>Category</th>
-          <th>Name</th>
-          <th>Quantity</th>
+          <th>Ambulance No </th>
+          <th>Patient Name</th>
+          <th>Age</th>
+          <th>Gender</th>
+          <th>State</th>
+          <th>Description</th>
+          <th>Pickup Location</th>
+          <th>Arrival Time</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -80,18 +83,13 @@
     </div>
   </div>
 
-  <button onclick="abcd()">Test</button>
-
-  <script>
-    function abcd() {
-      alert("Abcd");
-    }
-  </script>
-
   <script type="module">
 
+    // Import statements...
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-
+    import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+  
+    // Firebase configuration...
     const firebaseConfig = {
         apiKey: "AIzaSyATXZkqRM78XuaVfbxOb4Gz-onavq9b-D0",
         authDomain: "flutter-test1-52276.firebaseapp.com",
@@ -101,117 +99,100 @@
         messagingSenderId: "509020274776",
         appId: "1:509020274776:web:4b509bb598c737863fca2d"
     };
-
+  
     const app = initializeApp(firebaseConfig);
-
-    import {getDatabase, ref, child, onValue, get, remove}
-    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
     const db = getDatabase();
-
+  
     var itemNo = 0;
     var ItemList = [];
     var tbody = document.getElementById("tbody1");
-
+  
     let ModalCategory = document.getElementById('CategoryLabel');
     let ModalName = document.getElementById('NameLabel');
     let ModalQuantity = document.getElementById('QuantityLabel');
-
     let ActionDelete = document.getElementById('DeleteBtn');
+  
+    // Create a global object to attach functions
+    window.MyApp = {};
+  
+    // Attach functions to the global object
+    window.MyApp.AddItemToTable = function (category, name, quantity, rollnum) {
+        var trow = document.createElement("tr");
+        var td1 = document.createElement("td");
+        var td2 = document.createElement("td");
+        var td3 = document.createElement("td");
+        var td4 = document.createElement("td");
+        var td5 = document.createElement("td");
+
+        ItemList.push([category,name,quantity]).toString();
+
+        td1.innerHTML = ++itemNo;
+        td2.innerHTML = rollnum;
+        td3.innerHTML = category;
+        td4.innerHTML = name;
+        td5.innerHTML = quantity;
+
+        trow.appendChild(td1);
+        trow.appendChild(td2);
+        trow.appendChild(td3);
+        trow.appendChild(td4);
+        trow.appendChild(td5);
+
+        var ActionsDiv = document.createElement("div");
+        ActionsDiv.innerHTML = '<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="fillTboxes('+itemNo+')" >Delete</button>'
+        // ActionsDiv.innerHTML = '<button type="button" class="btn btn-danger" onclick="abcd()">Delete</button>'
 
 
-    function AddItemToTable(category, name, quantity, rollnum){
-      var trow = document.createElement("tr");
-      var td1 = document.createElement("td");
-      var td2 = document.createElement("td");
-      var td3 = document.createElement("td");
-      var td4 = document.createElement("td");
-      var td5 = document.createElement("td");
+        trow.appendChild(ActionsDiv);
+        tbody.appendChild(trow);
+    };
+  
+    window.MyApp.AddAllItemsToTable = function (TheItem) {
+        itemNo = 0;
+        tbody.innerHTML = "";
+        TheItem.forEach(element => {
+            AddItemToTable(element.category, element.name, element.quantity, element.rollnum);
+        });
+    };
+  
+    window.MyApp.GetAllDataRealtime = function () {
+        const dbRef = ref(db, "shopping-app");
 
-      ItemList.push([category,name,quantity]).toString();
-
-      td1.innerHTML = ++itemNo;
-      td2.innerHTML = rollnum;
-      td3.innerHTML = category;
-      td4.innerHTML = name;
-      td5.innerHTML = quantity;
-
-      trow.appendChild(td1);
-      trow.appendChild(td2);
-      trow.appendChild(td3);
-      trow.appendChild(td4);
-      trow.appendChild(td5);
-
-      var ActionsDiv = document.createElement("div");
-      ActionsDiv.innerHTML = '<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="fillTboxes('+itemNo+')" >Delete</button>'
-      // ActionsDiv.innerHTML = '<button type="button" class="btn btn-danger" onclick="abcd()">Delete</button>'
-
-
-      trow.appendChild(ActionsDiv);
-      tbody.appendChild(trow);
-      
-      }
-
-    function AddAllItemsToTable(TheItem){
-      itemNo = 0;
-      tbody.innerHTML = "";
-      TheItem.forEach(element => {
-        AddItemToTable(element.category, element.name, element.quantity, element.rollnum);
-      });
-
-    }
-    // function GetAllDataOnce(){
-    //   const dbRef = ref(db);
-
-    //   get(child(dbRef, "shopping-app"))
-    //   .then((snapshot) => {
-
-    //     var items = [];
-
-    //     snapshot.forEach(childSnapshot => {
-    //       items.push(childSnapshot.val());
-    //     });
-
-    //     AddAllItemsToTable(items);
-    //   });
-    // }
-
-    function GetAllDataRealtime(){
-      const dbRef = ref(db, "shopping-app");
-
-      onValue(dbRef, (snapshot)=>{
+        onValue(dbRef, (snapshot)=>{
         var items = [];
 
         snapshot.forEach(childSnapshot => {
-          items.push(childSnapshot.val());
+            items.push(childSnapshot.val());
         });
 
         AddAllItemsToTable(items);
-      });
-    }
-    
-
-    function fillTboxes(myIndex){
+        });
+    };
+  
+    window.MyApp.fillTboxes = function (myIndex) {
         --myIndex;
         ModalCategory.value = ItemList[myIndex][0];
         ModalName.value = ItemList[myIndex][1];
         ModalQuantity.value = ItemList[myIndex][2];
-    }
-
-    function DeleteRecode(recNo){
-      remove(ref(db, "shopping-app/" + recNo))
-      .then(()=>{
-        alert("Deleted!");
-      })
-      .catch((error)=>{
-        alert("Error");
-        console.log(error);
-      })
-    }
-
-    window.onload = GetAllDataRealtime;
-
+    };
+  
+    window.MyApp.DeleteRecode = function (recNo) {
+        remove(ref(db, "shopping-app/" + recNo))
+        .then(()=>{
+            alert("Deleted!");
+        })
+        .catch((error)=>{
+            alert("Error");
+            console.log(error);
+        })
+    };
+  
+    window.onload = window.MyApp.GetAllDataRealtime;
+  
   </script>
+  
+
+  
 
 </body>
 </html>

@@ -74,7 +74,8 @@ class _GroceryListState extends State<GroceryList> {
       });
     } catch (error) {
       setState(() {
-        _error = "Somthing went wrong.\nPlease Check your internet connection and try again.";
+        _error =
+            "Somthing went wrong.\nPlease Check your internet connection and try again.";
       });
     }
   }
@@ -100,6 +101,8 @@ class _GroceryListState extends State<GroceryList> {
     setState(() {
       _groceryItems.remove(item);
     });
+
+    print(item.id);
 
     final url = Uri.https(
       "flutter-test1-52276-default-rtdb.firebaseio.com",

@@ -21,7 +21,7 @@ class _NewItemState extends State<NewItem> {
   final _formKey = GlobalKey<FormState>();
   var _enteredName = "";
   var _enteredQuantity = 1;
-  
+
   var _selectedCategory = categories[Categories.vegetables]!;
   var isSending = false;
 
@@ -78,6 +78,8 @@ class _NewItemState extends State<NewItem> {
       if (!context.mounted) {
         return;
       }
+
+      print(resData["name"]);
 
       Navigator.of(context).pop(
         GroceryItem(
