@@ -66,7 +66,7 @@ class _AuthScreenState extends State<AuthScreen> {
             .set({
           "username": _userName,
           "email": _enteredEmail,
-          "imageUrl": imageUrl
+          "imageUrl": imageUrl,
         });
       }
     } on FirebaseAuthException catch (error) {
